@@ -7,12 +7,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
-public class UserDetailsImpl implements UserDetails{
+
+public class UserDetailsImpl implements UserDetails {
 
     private Atendente atendente;
 
     public UserDetailsImpl(Atendente atendente) {
         this.atendente = atendente;
+    }
+
+    // --- MÉTODO ADICIONADO ---
+    public int getId() {
+        return atendente.getId();
     }
 
     @Override
@@ -25,13 +31,13 @@ public class UserDetailsImpl implements UserDetails{
 
     @Override
     public String getPassword() {
-        return atendente.getChave_acesso();
-    } // Retorna a credencial do usuário que criamos anteriormente
+        return atendente.getChaveAcesso();
+    }
 
     @Override
     public String getUsername() {
-        return atendente.getUsuario_login();
-    } // Retorna o nome de usuário do usuário que criamos anteriormente
+        return atendente.getUsuarioLogin();
+    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -50,7 +56,6 @@ public class UserDetailsImpl implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return atendente.getAtivo() == 1;
     }
-
 }

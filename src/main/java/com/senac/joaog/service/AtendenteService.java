@@ -1,16 +1,25 @@
 package com.senac.joaog.service;
 
 import com.senac.joaog.dto.request.AtendenteDTORequest;
+import com.senac.joaog.dto.request.LoginUserDTO;
+import com.senac.joaog.dto.response.AtendenteDTOResponse;
+import com.senac.joaog.dto.response.RecoveryJwtTokenDTO;
 import com.senac.joaog.entity.Atendente;
 import com.senac.joaog.entity.Role;
+import com.senac.joaog.entity.RoleName;
 import com.senac.joaog.repository.AtendenteRepository;
 import com.senac.joaog.repository.RoleRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,17 +39,18 @@ public class AtendenteService {
 
     public Atendente criar(AtendenteDTORequest dto) {
         Atendente atendente = modelMapper.map(dto, Atendente.class);
-        atendente.setChave_acesso(passwordEncoder.encode(dto.getChave_acesso()));
+        atendente.setChaveAcesso(passwordEncoder.encode(dto.getChave_acesso()));
         atendente.setAtivo(1);
+        atendente.setDataCriacao(LocalDateTime.now());
 
-        Role role = RoleRepository.findByName(dto.getRole())
+        Role role = roleRepository.findByName(dto.getRoleName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Role não encontrada"));
         atendente.setRoles(List.of(role));
 
         return atendenteRepository.save(atendente);
     }
 
-    public Atendente alterarStatus(Long id, int status) {
+    public Atendente alterarStatus(int id, int status) {
         Atendente atendente = atendenteRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Atendente não encontrado"));
 
@@ -56,6 +66,14 @@ public class AtendenteService {
     }
 
     public Atendente listarAtendentePorId(Integer idAtendente){
-        return this.atendenteRepository.obterAlunoAtivoPorId(idAtendente);
+        return this.atendenteRepository.obterAtendenteAtivoPorId(idAtendente);
+    }
+
+    public RecoveryJwtTokenDTO authenticateUser(LoginUserDTO loginUserDTO) {
+        return null;
+    }
+
+    public AtendenteDTOResponse salvar(@Valid AtendenteDTORequest atendenteDTORequest) {
+        return null;
     }
 }

@@ -23,7 +23,7 @@ public class ChamadaController {
 
     @PostMapping
     public ResponseEntity<ChamadaAtendente> registrarChamada(
-            @Valid @RequestBody ChamadaRequestDTO dto,
+            @Valid @RequestBody ChamadaDTORequest dto,
             Authentication authentication
     ) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -31,7 +31,7 @@ public class ChamadaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novaChamada);
     }
 
-    @GetMapping("/minhas")
+    @GetMapping("/listaa chamadas")
     public ResponseEntity<List<ChamadaAtendente>> listarMinhasChamadas(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<ChamadaAtendente> chamadas = chamadaService.listarChamadasPorAtendenteId(userDetails.getId());

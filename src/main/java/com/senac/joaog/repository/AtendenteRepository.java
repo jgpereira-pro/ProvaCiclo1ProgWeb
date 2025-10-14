@@ -14,7 +14,7 @@ public interface AtendenteRepository extends JpaRepository<Atendente, Integer> {
     List<Atendente> listarAtendentesAtivos();
 
     @Query("SELECT a FROM Atendente a WHERE a.id = :id AND a.status >=0")
-    Atendente obterAlunoAtivoPorId(@Param("id") int id);
+    Atendente obterAtendenteAtivoPorId(@Param("id") int id);
 
     Optional<Atendente> findByUsuario_login(String usuario_login);
 }

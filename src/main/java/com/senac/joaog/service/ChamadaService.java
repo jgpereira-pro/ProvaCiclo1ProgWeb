@@ -34,16 +34,10 @@ public class ChamadaService {
         chamada.setDataAbertura(LocalDateTime.now());
         chamada.setStatus(1);
 
-        // Salva a nova chamada no banco de dados
         return chamadaRepository.save(chamada);
     }
 
-    /**
-     * Lista todas as chamadas realizadas por um atendente específico.
-     * @param atendenteId O ID do atendente.
-     * @return Uma lista de chamadas.
-     */
-    public List<ChamadaAtendente> listarChamadasPorAtendenteId(Long atendenteId) {
+    public List<ChamadaAtendente> listarChamadasPorAtendenteId(int atendenteId) {
         return chamadaRepository.findByAtendenteId(atendenteId);
     }
 }

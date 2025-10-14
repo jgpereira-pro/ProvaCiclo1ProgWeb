@@ -1,41 +1,32 @@
 package com.senac.joaog.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "chamada_atendente")
 public class ChamadaAtendente {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chamada_atendente_id")
-    private int id;
+    private Integer id;
 
-    @Column(name = "chamada_atendente_descricao")
     private String descricao;
-
-    @Column(name = "chamada_atendente_data_abertura")
     private LocalDateTime dataAbertura;
-
-    @Column(name = "chamada_atendente_data_fechamento")
     private LocalDateTime dataFechamento;
-
-    @Column(name = "chamada_atendente_status")
     private int status;
 
-    @ManyToOne
-    @JoinColumn(name = "chamada_atendente_id", nullable = false)
-    @JsonIgnore
-    private ChamadaAtendente chamadaAtendente;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "atendente_id", nullable = false)
+    @JsonBackReference
+    private Atendente atendente;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -71,11 +62,11 @@ public class ChamadaAtendente {
         this.status = status;
     }
 
-    public ChamadaAtendente getChamadaAtendente() {
-        return chamadaAtendente;
+    public Atendente getAtendente() {
+        return atendente;
     }
 
-    public void setChamadaAtendente(ChamadaAtendente chamadaAtendente) {
-        this.chamadaAtendente = chamadaAtendente;
+    public void setAtendente(Atendente atendente) {
+        this.atendente = atendente;
     }
 }

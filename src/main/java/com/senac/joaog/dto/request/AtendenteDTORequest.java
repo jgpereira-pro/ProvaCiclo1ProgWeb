@@ -1,6 +1,5 @@
 package com.senac.joaog.dto.request;
 
-import com.senac.joaog.entity.RoleName;
 import jakarta.validation.constraints.NotBlank;
 
 public class AtendenteDTORequest {
@@ -12,7 +11,7 @@ public class AtendenteDTORequest {
 
     private String chave_acesso;
 
-    private RoleName roleName;
+    private String roleName;
 
     public String getNome() {
         return nome;
@@ -38,11 +37,11 @@ public class AtendenteDTORequest {
         this.chave_acesso = chave_acesso;
     }
 
-    public RoleName getRoleName() {
+    public String getRoleName() {
         return roleName;
     }
 
-    public void setRoleName(RoleName roleName) {
+    public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 }
