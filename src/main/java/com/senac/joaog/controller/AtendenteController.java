@@ -1,10 +1,9 @@
 package com.senac.joaog.controller;
 
-
 import com.senac.joaog.dto.request.AtendenteDTORequest;
 import com.senac.joaog.dto.request.LoginUserDTO;
-import com.senac.joaog.dto.response.AtendenteDTOResponse;
 import com.senac.joaog.dto.response.RecoveryJwtTokenDTO;
+import com.senac.joaog.dto.response.AtendenteDTOResponse;
 import com.senac.joaog.entity.Atendente;
 import com.senac.joaog.service.AtendenteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,8 +42,9 @@ public class AtendenteController {
     }
 
     @PostMapping("/criar")
-    @Operation(summary = "Criar um novo atendente")
+    @Operation(summary = "Criar um novo atendente no sistema.")
     public ResponseEntity<AtendenteDTOResponse> criar(@Valid @RequestBody AtendenteDTORequest atendenteDTORequest){
+
         return ResponseEntity.ok(atendenteService.salvar(atendenteDTORequest));
     }
 }
