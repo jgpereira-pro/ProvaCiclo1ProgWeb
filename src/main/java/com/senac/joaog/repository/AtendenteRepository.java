@@ -19,4 +19,6 @@ public interface AtendenteRepository extends JpaRepository<Atendente, Integer> {
     Atendente obterAtendenteAtivoPorId(@Param("id") int id);
 
     Optional<Atendente> findByUsuario_login(String usuario_login);
+
+    public Atendente findByUsuarioLogin(String subject);
 }

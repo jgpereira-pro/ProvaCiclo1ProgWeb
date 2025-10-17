@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class ChamadaService {
+public class ChamadaAtendenteService {
 
-    private final ChamadaAtendenteRepository chamadaRepository;
+    private final ChamadaAtendenteRepository chamadaAtendenteRepository;
     private final AtendenteRepository atendenteRepository;
     private final ModelMapper modelMapper;
 
-    public ChamadaService(ChamadaAtendenteRepository chamadaRepository, AtendenteRepository atendenteRepository, ModelMapper modelMapper) {
-        this.chamadaRepository = chamadaRepository;
+    public ChamadaAtendenteService(ChamadaAtendenteRepository chamadaRepository, AtendenteRepository atendenteRepository, ModelMapper modelMapper) {
+        this.chamadaAtendenteRepository = chamadaRepository;
         this.atendenteRepository = atendenteRepository;
         this.modelMapper = modelMapper;
     }
@@ -34,10 +34,10 @@ public class ChamadaService {
         chamada.setDataAbertura(LocalDateTime.now());
         chamada.setStatus(1);
 
-        return chamadaRepository.save(chamada);
+        return chamadaAtendenteRepository.save(chamada);
     }
 
     public List<ChamadaAtendente> listarChamadasPorAtendenteId(int atendenteId) {
-        return chamadaRepository.findByAtendenteId(atendenteId);
+        return chamadaAtendenteRepository.findByAtendenteId(atendenteId);
     }
 }

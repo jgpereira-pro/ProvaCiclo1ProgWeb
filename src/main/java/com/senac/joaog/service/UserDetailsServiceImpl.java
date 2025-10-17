@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private AtendenteRepository atendenteRepository;
+    private AtendenteRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Atendente atendente = atendenteRepository.findByUsuario_login(username).orElseThrow(() -> new RuntimeException("Atendente não encontrado."));
-        return new UserDetailsImpl(atendente);
+        Atendente user = userRepository.findByUsuarioLogin(username).orElseThrow(() -> new RuntimeException("Atendente não encontrado."));
+        return new UserDetailsImpl(user);
     }
 
 }

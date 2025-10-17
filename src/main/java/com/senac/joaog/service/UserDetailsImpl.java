@@ -10,20 +10,15 @@ import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private Atendente atendente;
+    private Atendente usuario;
 
-    public UserDetailsImpl(Atendente atendente) {
-        this.atendente = atendente;
-    }
-
-    // --- MÉTODO ADICIONADO ---
-    public int getId() {
-        return atendente.getId();
+    public UserDetailsImpl(Atendente user) {
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return atendente.getRoles()
+        return usuario.getRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
@@ -31,12 +26,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return atendente.getChaveAcesso();
+        return usuario.getChaveAcesso();
     }
 
     @Override
     public String getUsername() {
-        return atendente.getUsuarioLogin();
+        return usuario.getUsuarioLogin();
     }
 
     @Override
@@ -56,6 +51,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return atendente.getAtivo() == 1;
+        return usuario.getAtivo() == 1;
     }
 }

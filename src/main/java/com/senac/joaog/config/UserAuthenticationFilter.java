@@ -33,8 +33,8 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             String token = recoveryToken(request);
             if (token != null) {
                 String subject = jwtTokenService.getSubjectFromToken(token);
-                Atendente atendente = atendenteRepository.findByUsuario_login(subject).get();
-                UserDetailsImpl userDetails = new UserDetailsImpl(atendente);
+                Atendente user = atendenteRepository.findByUsuarioLogin(subject);
+                UserDetailsImpl userDetails = new UserDetailsImpl(user);
 
                 Authentication authentication =
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());

@@ -1,39 +1,38 @@
 package com.senac.joaog.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "atendente")
 public class Atendente {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "atendente_id")
     private Integer id;
 
-    @Column(name = "atendente_nome", length = 200)
+    @Column(name = "atendente_nome")
     private String nome;
 
-    @Column(name = "atendente_usuario_login", length = 100, unique = true, nullable = false)
+    @Column(name = "atendente_usuario_login")
     private String usuarioLogin;
 
-    @Column(name = "atendente_chave_acesso", length = 255, nullable = false)
+    @Column(name = "atendente_chave_acesso")
     private String chaveAcesso;
 
     @Column(name = "atendente_data_criacao")
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
     @Column(name = "atendente_ativo")
-    private int ativo;
+    private Integer ativo;
 
-    @OneToMany(mappedBy = "atendente", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private List<ChamadaAtendente> chamadas;
+    @OneToMany(mappedBy = "atendente")
+    private List<ChamadaAtendente> chamadasAtendente;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "atendente_roles",
+    @ManyToMany
+    @JoinTable(name = "atendente_role",
             joinColumns = @JoinColumn(name = "atendente_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
@@ -70,28 +69,28 @@ public class Atendente {
         this.chaveAcesso = chaveAcesso;
     }
 
-    public LocalDateTime getDataCriacao() {
+    public LocalDate getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDateTime dataCriacao) {
+    public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
-    public int getAtivo() {
+    public Integer getAtivo() {
         return ativo;
     }
 
-    public void setAtivo(int ativo) {
+    public void setAtivo(Integer ativo) {
         this.ativo = ativo;
     }
 
-    public List<ChamadaAtendente> getChamadas() {
-        return chamadas;
+    public List<ChamadaAtendente> getChamadasAtendente() {
+        return chamadasAtendente;
     }
 
-    public void setChamadas(List<ChamadaAtendente> chamadas) {
-        this.chamadas = chamadas;
+    public void setChamadasAtendente(List<ChamadaAtendente> chamadasAtendente) {
+        this.chamadasAtendente = chamadasAtendente;
     }
 
     public List<Role> getRoles() {

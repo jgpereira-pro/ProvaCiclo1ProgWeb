@@ -2,7 +2,7 @@ package com.senac.joaog.controller;
 
 import com.senac.joaog.dto.request.ChamadaDTORequest;
 import com.senac.joaog.entity.ChamadaAtendente;
-import com.senac.joaog.service.ChamadaService;
+import com.senac.joaog.service.ChamadaAtendenteService;
 import com.senac.joaog.service.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -15,9 +15,9 @@ import java.util.List;
 @RequestMapping("api/chamada_atendente")
 public class ChamadaController {
 
-    private final ChamadaService chamadaService;
+    private final ChamadaAtendenteService chamadaService;
 
-    public ChamadaController(ChamadaService chamadaService) {
+    public ChamadaController(ChamadaAtendenteService chamadaService) {
         this.chamadaService = chamadaService;
     }
 

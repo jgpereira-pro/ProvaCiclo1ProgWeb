@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/atendente")
 @Tag(name="Atendente", description = "Api para gerenciamento de atendente do sistema")
@@ -24,15 +26,14 @@ public class AtendenteController {
         this.atendenteService = atendenteService;
     }
 
-    @GetMapping("/listarPorIdAtendente/{idAtendente}")
-    @Operation(summary = "Listar atendentes do sistema pelo id do atendentes")
-    public ResponseEntity<Atendente> listarPorIdAtendente(@PathVariable("idAtendente") Integer idAtendente){
-        Atendente atendente = atendenteService.listarAtendentePorId(idAtendente);
-        if (atendente == null) {
-            return ResponseEntity.noContent().build();
-        }else{
-            return ResponseEntity.ok(atendente);
-        }
+    @GetMapping("/listarTodos")
+    public ResponseEntity<List<Atendente>> listarTodos(){
+        return ResponseEntity.ok(atendenteService.listarTodos());
+    }
+
+    @GetMapping("/listarporid/{id}")
+    public ResponseEntity<Atendente> listarPorId(@PathVariable ("id") Integer id){
+        return ResponseEntity.ok(atendenteService.listarPorId(id));
     }
 
     @PostMapping("/login")
