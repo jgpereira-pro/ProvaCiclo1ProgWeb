@@ -6,8 +6,8 @@ import java.util.List;
 
 public record RecoveryUserDTO(
 
-        Long id,
-        String usuario_login,
+        Integer id,
+        String usuarioLogin,
         List<Role> roles
 
 ) {

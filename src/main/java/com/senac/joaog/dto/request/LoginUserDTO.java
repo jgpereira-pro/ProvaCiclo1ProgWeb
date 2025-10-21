@@ -1,9 +1,12 @@
 package com.senac.joaog.dto.request;
 
+import com.senac.joaog.entity.RoleName;
+
 public record LoginUserDTO(
 
-        String login,
-        String password
+        String email,
+        String password,
+        RoleName role
 
 ) {
 }

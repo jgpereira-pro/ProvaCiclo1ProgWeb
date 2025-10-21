@@ -21,25 +21,14 @@ public class SecurityConfiguration {
     @Autowired
     private UserAuthenticationFilter userAuthenticationFilter;
 
-    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
-            "/api/atendente/criar",
+    // A LISTA CORRETA ESTÁ AQUI
+    public static final String [] ENDPOINTS_PUBLICOS = {
             "/api/atendente/login",
+            "/api/atendente/criar",
+            // Endpoints do Swagger
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html"
-
-    };
-
-    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
-            "/users/test",
-    };
-
-    public static final String [] ENDPOINTS_CUSTOMER = {
-            "/users/test/customer"
-    };
-
-    public static final String [] ENDPOINTS_ADMIN = {
-            "/users/test/administrator"
     };
 
     @Bean
@@ -48,12 +37,9 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRATOR")
-                        .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
-                        .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
-                        .anyRequest().denyAll()
+                        .requestMatchers(ENDPOINTS_PUBLICOS).permitAll() // USA A LISTA CORRETA
+                        .requestMatchers(HttpMethod.GET).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -69,5 +55,4 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

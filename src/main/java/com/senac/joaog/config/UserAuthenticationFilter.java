@@ -33,7 +33,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             String token = recoveryToken(request);
             if (token != null) {
                 String subject = jwtTokenService.getSubjectFromToken(token);
-                Atendente user = atendenteRepository.findByUsuarioLogin(subject);
+                Atendente user = atendenteRepository.findByUsuarioLogin(subject).get();
                 UserDetailsImpl userDetails = new UserDetailsImpl(user);
 
                 Authentication authentication =
@@ -55,10 +55,11 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
+    // --- MÉTODO CORRIGIDO ---
+    // Agora usa a nova lista de endpoints públicos da SecurityConfiguration
     private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        return Arrays.stream(SecurityConfiguration.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).noneMatch(publicEndpoint ->
-                requestURI.startsWith(publicEndpoint.replace("/**", "")) // suporta wildcard
-        );
+        return !Arrays.stream(SecurityConfiguration.ENDPOINTS_PUBLICOS)
+                .anyMatch(publicEndpoint -> requestURI.startsWith(publicEndpoint.replace("/**", "")));
     }
 }

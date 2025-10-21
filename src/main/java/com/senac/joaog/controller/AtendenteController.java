@@ -1,14 +1,12 @@
 package com.senac.joaog.controller;
 
-import com.senac.joaog.dto.request.AtendenteDTORequest;
+import com.senac.joaog.dto.request.CreateUserDTO;
 import com.senac.joaog.dto.request.LoginUserDTO;
 import com.senac.joaog.dto.response.RecoveryJwtTokenDTO;
-import com.senac.joaog.dto.response.AtendenteDTOResponse;
 import com.senac.joaog.entity.Atendente;
 import com.senac.joaog.service.AtendenteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,8 +42,8 @@ public class AtendenteController {
 
     @PostMapping("/criar")
     @Operation(summary = "Criar um novo atendente no sistema.")
-    public ResponseEntity<AtendenteDTOResponse> criar(@Valid @RequestBody AtendenteDTORequest atendenteDTORequest){
-
-        return ResponseEntity.ok(atendenteService.salvar(atendenteDTORequest));
+    public ResponseEntity<Void> criarAtendente (@RequestBody CreateUserDTO createUserDTO){
+        atendenteService.criarAtendente(createUserDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

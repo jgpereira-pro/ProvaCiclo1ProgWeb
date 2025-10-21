@@ -1,6 +1,8 @@
 package com.senac.joaog.service;
 
+import com.senac.joaog.config.SecurityConfiguration;
 import com.senac.joaog.dto.request.AtendenteDTORequest;
+import com.senac.joaog.dto.request.CreateUserDTO;
 import com.senac.joaog.dto.request.LoginUserDTO;
 import com.senac.joaog.dto.response.AtendenteDTOResponse;
 import com.senac.joaog.dto.response.RecoveryJwtTokenDTO;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,13 +25,13 @@ public class AtendenteService {
 
     private final AtendenteRepository atendenteRepository;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final SecurityConfiguration securityConfiguration;
     private final ModelMapper modelMapper;
 
-    public AtendenteService(AtendenteRepository atendenteRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+    public AtendenteService(AtendenteRepository atendenteRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, SecurityConfiguration securityConfiguration, ModelMapper modelMapper) {
         this.atendenteRepository = atendenteRepository;
         this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.securityConfiguration = securityConfiguration;
         this.modelMapper = modelMapper;
     }
 
@@ -39,17 +42,18 @@ public class AtendenteService {
         return this.atendenteRepository.findById(id).orElse(null);
     }
 
-    public Atendente criar(AtendenteDTORequest dto) {
-        Atendente atendente = modelMapper.map(dto, Atendente.class);
-        atendente.setChaveAcesso(passwordEncoder.encode(dto.getChave_acesso()));
-        atendente.setAtivo(1);
-        atendente.setDataCriacao(LocalDate.now());
+    public void criarAtendente(CreateUserDTO createUserDTO){
+        Role role = roleRepository.findByName(createUserDTO.role().name());
 
-        Role role = roleRepository.findByName(dto.getRoleName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Role não encontrada"));
-        atendente.setRoles(List.of(role));
+        Atendente novoAtendente = new Atendente();
 
-        return atendenteRepository.save(atendente);
+        novoAtendente.setNome(createUserDTO.nome());
+        novoAtendente.setUsuarioLogin(createUserDTO.usuarioLogin());
+        novoAtendente.setChaveAcesso(securityConfiguration.passwordEncoder().encode(createUserDTO.chaveAcesso()));
+        novoAtendente.setDataCriacao(LocalDateTime.now());
+        novoAtendente.setAtivo(1);
+        novoAtendente.setRoles(List.of(role));
+        atendenteRepository.save(novoAtendente);
     }
 
     public Atendente alterarStatus(int id, int status) {
@@ -65,10 +69,6 @@ public class AtendenteService {
 
     public List<Atendente> listarTodosComChamadas() {
         return atendenteRepository.findAll();
-    }
-
-    public Atendente listarAtendentePorId(Integer idAtendente){
-        return this.atendenteRepository.obterAtendenteAtivoPorId(idAtendente);
     }
 
     public RecoveryJwtTokenDTO authenticateUser(LoginUserDTO loginUserDTO) {

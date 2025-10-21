@@ -13,7 +13,7 @@ public class UserDetailsImpl implements UserDetails {
     private Atendente usuario;
 
     public UserDetailsImpl(Atendente user) {
-        this.user = user;
+        this.usuario = usuario;
     }
 
     @Override

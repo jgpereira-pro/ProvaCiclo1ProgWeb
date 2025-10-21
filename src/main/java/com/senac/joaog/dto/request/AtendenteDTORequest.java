@@ -2,7 +2,8 @@ package com.senac.joaog.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class AtendenteDTORequest {
+public class AtendenteDTORequest
+{
 
     @NotBlank(message= "o nome é obrigatório")
     private String nome;
