@@ -31,7 +31,7 @@
 //        return ResponseEntity.status(HttpStatus.CREATED).body(novaChamada);
 //    }
 //
-//    @GetMapping("/listaa chamadas")
+//    @GetMapping("/lista chamadas")
 //    public ResponseEntity<List<ChamadaAtendente>> listarMinhasChamadas(Authentication authentication) {
 //        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 //        List<ChamadaAtendente> chamadas = chamadaService.listarChamadasPorAtendenteId(userDetails.getId());
