@@ -13,6 +13,9 @@ import com.senac.joaog.repository.RoleRepository;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,13 +28,15 @@ public class AtendenteService {
     private final AtendenteRepository atendenteRepository;
     private final RoleRepository roleRepository;
     private final SecurityConfiguration securityConfiguration;
-    private final ModelMapper modelMapper;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenService jwtTokenService;
 
-    public AtendenteService(AtendenteRepository atendenteRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, SecurityConfiguration securityConfiguration, ModelMapper modelMapper) {
+    public AtendenteService(AtendenteRepository atendenteRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, SecurityConfiguration securityConfiguration, ModelMapper modelMapper, AuthenticationManager authenticationManager, JwtTokenService jwtTokenService) {
         this.atendenteRepository = atendenteRepository;
         this.roleRepository = roleRepository;
         this.securityConfiguration = securityConfiguration;
-        this.modelMapper = modelMapper;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenService = jwtTokenService;
     }
 
     public List<Atendente> listarTodos(){
@@ -42,7 +47,7 @@ public class AtendenteService {
     }
 
     public void criarAtendente(CreateUserDTO createUserDTO){
-        Role role = roleRepository.findByName(createUserDTO.role().name());
+        Role role = roleRepository.findByName(createUserDTO.role());
 
         Atendente novoAtendente = new Atendente();
 
@@ -77,4 +82,13 @@ public class AtendenteService {
     public AtendenteDTOResponse salvar(@Valid AtendenteDTORequest atendenteDTORequest) {
         return null;
     }
+
+    public RecoveryJwtTokenDTO login(LoginUserDTO loginUserDTO) {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken;
+        usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginUserDTO.login(), loginUserDTO.chavaAcesso());
+        Authentication authentication =  authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        return new RecoveryJwtTokenDTO(jwtTokenService.generateToken(userDetails));
+    }
+
 }

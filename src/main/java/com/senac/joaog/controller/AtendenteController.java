@@ -34,16 +34,15 @@ public class AtendenteController {
         return ResponseEntity.ok(atendenteService.listarPorId(id));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<RecoveryJwtTokenDTO> authenticateUser(@RequestBody LoginUserDTO loginUserDTO) {
-        RecoveryJwtTokenDTO token = atendenteService.authenticateUser(loginUserDTO);
-        return new ResponseEntity<>(token, HttpStatus.OK);
-    }
-
     @PostMapping("/criar")
     @Operation(summary = "Criar um novo atendente no sistema.")
     public ResponseEntity<Void> criarAtendente (@RequestBody CreateUserDTO createUserDTO){
         atendenteService.criarAtendente(createUserDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<RecoveryJwtTokenDTO> loginAtendente(@RequestBody LoginUserDTO loginUserDTO) {
+        return new ResponseEntity<>(atendenteService.login(loginUserDTO), HttpStatus.OK);
     }
 }
