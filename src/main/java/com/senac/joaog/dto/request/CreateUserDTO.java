@@ -9,7 +9,7 @@ public record CreateUserDTO(
         String nome,
         String usuarioLogin,
         String chaveAcesso,
-        LocalDateTime dataCricação,
+        LocalDateTime dataCricacao,
         RoleName role
 
 ) {

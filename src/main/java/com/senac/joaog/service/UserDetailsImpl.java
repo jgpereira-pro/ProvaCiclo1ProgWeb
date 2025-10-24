@@ -10,15 +10,22 @@ import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private Atendente usuario;
+    private Atendente user; // Classe de usuário que criamos anteriormente
 
     public UserDetailsImpl(Atendente user) {
-        this.usuario = usuario;
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return usuario.getRoles()
+        /*
+         Este método converte a lista de papéis (roles) associados ao usuário
+         em uma coleção de GrantedAuthorities, que é a forma que o Spring Security
+         usa para representar papéis. Isso é feito mapeando cada papel para um
+         novo SimpleGrantedAuthority, que é uma implementação simples de
+         GrantedAuthority
+        */
+        return user.getRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
@@ -26,13 +33,13 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return usuario.getChaveAcesso();
-    }
+        return user.getChaveAcesso();
+    } // Retorna a credencial do usuário que criamos anteriormente
 
     @Override
     public String getUsername() {
-        return usuario.getUsuarioLogin();
-    }
+        return user.getUsuarioLogin();
+    } // Retorna o nome de usuário do usuário que criamos anteriormente
 
     @Override
     public boolean isAccountNonExpired() {
@@ -51,6 +58,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return usuario.getAtivo() == 1;
+        return true;
     }
+
 }

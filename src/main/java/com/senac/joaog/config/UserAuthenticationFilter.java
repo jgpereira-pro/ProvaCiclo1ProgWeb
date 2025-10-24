@@ -1,5 +1,6 @@
 package com.senac.joaog.config;
 
+
 import com.senac.joaog.entity.Atendente;
 import com.senac.joaog.repository.AtendenteRepository;
 import com.senac.joaog.service.JwtTokenService;
@@ -22,31 +23,35 @@ import java.util.Arrays;
 public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtTokenService jwtTokenService;
+    private JwtTokenService jwtTokenService; // Service que definimos anteriormente
 
     @Autowired
-    private AtendenteRepository atendenteRepository;
+    private AtendenteRepository userRepository; // Repository que definimos anteriormente
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // Verifica se o endpoint requer autenticação antes de processar a requisição
         if (checkIfEndpointIsNotPublic(request)) {
-            String token = recoveryToken(request);
+            String token = recoveryToken(request); // Recupera o token do cabeçalho Authorization da requisição
             if (token != null) {
-                String subject = jwtTokenService.getSubjectFromToken(token);
-                Atendente user = atendenteRepository.findByUsuarioLogin(subject).get();
-                UserDetailsImpl userDetails = new UserDetailsImpl(user);
+                String subject = jwtTokenService.getSubjectFromToken(token); // Obtém o assunto (neste caso, o nome de usuário) do token
+                Atendente user = userRepository.findByUsuarioLogin(subject).get(); // Busca o usuário pelo email (que é o assunto do token)
+                UserDetailsImpl userDetails = new UserDetailsImpl(user); // Cria um UserDetails com o usuário encontrado
 
+                // Cria um objeto de autenticação do Spring Security
                 Authentication authentication =
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
 
+                // Define o objeto de autenticação no contexto de segurança do Spring Security
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
                 throw new RuntimeException("O token está ausente.");
             }
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response); // Continua o processamento da requisição
     }
 
+    // Recupera o token do cabeçalho Authorization da requisição
     private String recoveryToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null) {
@@ -55,11 +60,13 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    // --- MÉTODO CORRIGIDO ---
-    // Agora usa a nova lista de endpoints públicos da SecurityConfiguration
+    // Verifica se o endpoint requer autenticação antes de processar a requisição
     private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {
+        //ajustado para funcionamento do swagger
         String requestURI = request.getRequestURI();
-        return !Arrays.stream(SecurityConfiguration.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED)
-                .anyMatch(publicEndpoint -> requestURI.startsWith(publicEndpoint.replace("/**", "")));
+        return Arrays.stream(SecurityConfiguration.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).noneMatch(publicEndpoint ->
+                requestURI.startsWith(publicEndpoint.replace("/**", "")) // suporta wildcard
+        );
     }
+
 }
